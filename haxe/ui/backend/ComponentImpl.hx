@@ -183,6 +183,10 @@ class ComponentImpl extends ComponentBase {
         }
         applyUseHandCursor(useHandCursor);
 
+        if (_imageDisplay != null) {
+            _imageDisplay.applyStyle(style);
+        }
+
         if (style.filter != null && style.filter.length > 0) {
             var array = [];
             for (fa in style.filter) {
@@ -239,6 +243,7 @@ class ComponentImpl extends ComponentBase {
         }
     }
 
+    private var _componentOffset:Point = new Point(0, 0);
     private override function getComponentOffset():Point {
         var p:DisplayObjectContainer = this;
         var s:DisplayObjectContainer = null;
@@ -250,10 +255,13 @@ class ComponentImpl extends ComponentBase {
             p = p.parent;
         }
         if (s == null)  {
-            return new Point(0, 0);
+            _componentOffset.x = 0;
+            _componentOffset.y = 0;
+        } else {
+            _componentOffset.x = s.x;
+            _componentOffset.y = s.y;
         }
-        var globalPoint = s.localToGlobal(new openfl.geom.Point(0, 0));
-        return new Point(globalPoint.x, globalPoint.y);
+        return _componentOffset;
     }
     
     private override function handleFrameworkProperty(id:String, value:Any) {
